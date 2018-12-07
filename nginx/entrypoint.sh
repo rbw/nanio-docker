@@ -4,13 +4,13 @@ NGINX_FILE="/etc/nginx/nginx.conf"
 NANIO_FILE="/etc/nginx/conf.d/nanio.conf"
 RATE_FILE="/etc/nginx/conf.d/rf.conf"
 
-USE_NGINX_WORKER_PROCESSES=${WORKER_PROCESSES:-1}
-REQUESTS_PER_SECOND_MAX=${RPS_MAX:-2}
+WORKER_PROCESSES=${NGINX_WORKERS:-1}
+RPS_MAX=${NGINX_RPS:-2}
 USE_LISTEN_PORT=${LISTEN_PORT:-80}
-NANIO_CORE_URL=${NANIO_URL:-http://127.0.0.1:8080}
+NANIO_CORE=${NANIO_ADDRESS:-127.0.0.1:8080}
 
-sed -i "/worker_processes\s/c\worker_processes ${USE_NGINX_WORKER_PROCESSES};" ${NGINX_FILE}
-echo "limit_req_zone \$binary_remote_addr zone=req_limit:10m rate=${REQUESTS_PER_SECOND_MAX}r/s;" > ${RATE_FILE}
+sed -i "/worker_processes\s/c\worker_processes ${WORKER_PROCESSES};" ${NGINX_FILE}
+echo "limit_req_zone \$binary_remote_addr zone=req_limit:10m rate=${RPS_MAX}r/s;" > ${RATE_FILE}
 
 echo "server {
         root /app;
@@ -35,14 +35,14 @@ echo "
         proxy_pass_header Server;
         proxy_set_header Host \$http_host;
         proxy_redirect off;
-        proxy_pass ${NANIO_CORE_URL};
+        proxy_pass http://${NANIO_CORE};
     }
     location /node-rpc {
         limit_req zone=req_limit burst=5 nodelay;
         proxy_pass_header Server;
         proxy_set_header Host \$http_host;
         proxy_redirect off;
-        proxy_pass ${NANIO_CORE_URL};
+        proxy_pass http://${NANIO_CORE};
     }
 }" >> ${NANIO_FILE}
 

@@ -2,7 +2,7 @@ FROM nginx:alpine
 
 RUN rm -rf /usr/share/nginx/html/*
 
-# Install environment
+# Update pkgs
 RUN apk update >/dev/null
 
 # Copy settings and dependencies

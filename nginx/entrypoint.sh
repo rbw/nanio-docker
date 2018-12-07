@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 NGINX_FILE="/etc/nginx/nginx.conf"
 NANIO_FILE="/etc/nginx/conf.d/nanio.conf"

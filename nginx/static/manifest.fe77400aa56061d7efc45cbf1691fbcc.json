@@ -1,0 +1,7 @@
+{
+  "name": "Nanio",
+  "short_name": "Nanio",
+  "orientation": "portrait",
+  "display": "standalone",
+  "start_url": "."
+}

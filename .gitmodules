@@ -1,0 +1,7 @@
+[submodule "core/app"]
+	path = core/app
+	url = https://github.com/rbw/nanio.git
+
+[submodule "nginx/app"]
+	path = nginx/app
+	url = https://github.com/rbw/nanio-ui.git

@@ -6,24 +6,30 @@ RATE_FILE="/etc/nginx/conf.d/rf.conf"
 
 WORKER_PROCESSES=${NGINX_WORKERS:-1}
 RPS_MAX=${NGINX_RPS:-2}
-USE_LISTEN_PORT=${LISTEN_PORT:-80}
 NANIO_CORE=${NANIO_ADDRESS:-127.0.0.1:8080}
 
 sed -i "/worker_processes\s/c\worker_processes ${WORKER_PROCESSES};" ${NGINX_FILE}
 echo "limit_req_zone \$binary_remote_addr zone=req_limit:10m rate=${RPS_MAX}r/s;" > ${RATE_FILE}
 
+if [[ "${USE_SSL}" == 1 && -f /certs/cert.crt && -f /certs/cert.key ]] ; then
+    echo "server {
+          listen 80;
+          return 301 https://\$server_name\$request_uri;
+      }" >> ${NANIO_FILE}
+fi
+
 echo "server {
         root /app;
         index index.html;
-" > ${NANIO_FILE}
+" >> ${NANIO_FILE}
 
 if [[ "${USE_SSL}" == 1 && -f /certs/cert.crt && -f /certs/cert.key ]] ; then
-    echo "listen ${USE_LISTEN_PORT} ssl;
+    echo "listen 443 ssl;
           ssl_certificate        /certs/cert.crt;
           ssl_certificate_key    /certs/cert.key;
     " >> ${NANIO_FILE}
 else
-    echo "listen ${USE_LISTEN_PORT};" >> ${NANIO_FILE}
+    echo "listen 80;" >> ${NANIO_FILE}
 fi
 
 echo "

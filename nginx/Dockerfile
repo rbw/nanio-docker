@@ -6,7 +6,8 @@ RUN rm -rf /usr/share/nginx/html/*
 RUN apk update >/dev/null
 
 # Copy settings and dependencies
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY ./conf/nginx.conf /etc/nginx/nginx.conf
+COPY ./conf/errors.conf /etc/nginx/conf.d/errors.conf
 COPY static /app
 COPY ./entrypoint.sh /
 

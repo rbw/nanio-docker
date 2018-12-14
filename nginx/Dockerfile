@@ -4,6 +4,7 @@ RUN rm -rf /usr/share/nginx/html/*
 
 # Update pkgs
 RUN apk update >/dev/null
+RUN apk add bash >/dev/null
 
 # Copy settings and dependencies
 COPY nginx.conf /etc/nginx/nginx.conf
